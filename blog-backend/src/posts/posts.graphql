@@ -1,0 +1,71 @@
+scalar DateTime
+
+type Topic {
+  id: Int
+  name: String
+  slug: String
+  description: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type Post {
+  id: Int
+  title: String
+  slug: String
+  description: String
+  content: String
+  views: Int
+  tagName: String
+  tag: Tag
+  imageId: Int
+  image: Image
+  topicId: Int
+  topic: Topic
+  writerId: Int
+  writer: User
+  isOnWeb: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  publishedAt: DateTime
+}
+
+input CreatePostInput {
+  title: String!
+  slug: String!
+  description: String
+  content: String!
+  tagName: String
+  topicId: Int!
+  isOnWeb: Boolean
+}
+
+input UpdatePostInput {
+  id: Int!
+  title: String
+  slug: String
+  description: String
+  content: String
+  tagName: String
+  topicId: Int
+  writerId: Int
+  isOnWeb: Boolean
+}
+
+type Posts {
+  total: Int
+  list: [Post]
+}
+
+type Query {
+  posts(pagination: PaginationCursorParams!, tagName: String, search: String): [Post]!
+  postsByTopic(pagination: PaginationParams!, orderBy: OrderByParams, topicId: Int): Posts!
+  post(id: Int!): Post
+  postBySlug(date: DateTime!, slug: String!): Post
+}
+
+type Mutation {
+  createPost(createPostInput: CreatePostInput!): Post!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
+  removePost(id: Int!): Post
+}

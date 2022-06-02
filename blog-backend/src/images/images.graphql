@@ -1,0 +1,29 @@
+scalar Upload
+scalar DateTime
+
+type Image {
+  id: Int
+  full: String
+  thumb: String
+  source: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  user: User
+  post: Post
+}
+
+input UpdateImageInput {
+  id: Int!
+  source: String
+}
+
+type Query {
+  images: [Image]!
+  image(id: Int!): Image
+}
+
+type Mutation {
+  uploadImage(file: Upload!): Image
+  updateImage(updateImageInput: UpdateImageInput!): Image!
+  removeImage(id: Int!): Image
+}

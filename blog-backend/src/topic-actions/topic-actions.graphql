@@ -1,0 +1,12 @@
+scalar DateTime
+
+type TopicAction {
+  id: Int
+  topicId: Int
+  topic: Topic
+  subscriberId: Int
+  subscriber: Subscriber
+  action: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}

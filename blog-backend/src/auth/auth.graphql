@@ -1,0 +1,25 @@
+scalar DateTime
+
+input AuthInput {
+  email: String!
+  password: String!
+}
+
+type Token {
+  accessToken: String!
+  refreshToken: String!
+}
+
+input ResetPasswordInput {
+  id: Int!
+  token: String!
+  password: String
+}
+
+type Mutation {
+  signIn(authInput: AuthInput!): Token!
+  signOut: String
+  refresh: Token!
+  forgotPassword(email: String!): String
+  resetPassword(resetPasswordInput: ResetPasswordInput!): String
+}

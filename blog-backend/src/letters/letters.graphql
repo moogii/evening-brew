@@ -1,0 +1,57 @@
+scalar DateTime
+
+type Letter {
+  id: Int
+  name: String
+  slug: String
+  topicId: Int
+  topic: Topic
+  editorId: Int
+  editor: User
+  imageId: Int
+  image: Image
+  sponsorImageId: Int
+  sponsorImage: Image
+  posts: [Post]
+  createdAt: DateTime
+  updatedAt: DateTime
+  publishedAt: DateTime
+}
+
+input CreateLetterInput {
+  name: String!
+  slug: String!
+  topicId: Int!
+  imageId: Int!
+  sponsorImageId: Int
+  publishedAt: DateTime
+  posts: [IdInput]
+}
+
+input UpdateLetterInput {
+  id: Int!
+  name: String
+  slug: String
+  topicId: Int!
+  imageId: Int!
+  sponsorImageId: Int
+  publishedAt: DateTime
+  posts: [IdInput]
+}
+
+type Letters {
+  list: [Letter]
+  total: Int
+}
+
+type Query {
+  letterList(pagination: PaginationParams): Letters!
+  letters(topicId: Int!, pagination: PaginationCursorParams): [Letter]!
+  letter(id: Int!): Letter
+}
+
+type Mutation {
+  createLetter(createLetterInput: CreateLetterInput!): Letter!
+  updateLetter(updateLetterInput: UpdateLetterInput!): Letter!
+  removeLetter(id: Int!): Letter
+}

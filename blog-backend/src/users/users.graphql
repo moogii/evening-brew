@@ -1,0 +1,78 @@
+scalar DateTime
+
+type Role {
+  id: Int!
+  name: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input IdInput {
+  id: Int!
+}
+
+type User {
+  # Example field (placeholder)
+  id: Int!
+  firstName: String
+  lastName: String
+  email: String!
+  active: Boolean
+  role: [Role]
+  twitter: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type Users {
+  total: Int!
+  list: [User]!
+}
+
+input CreateUserInput {
+  email: String!
+  roles: [IdInput]
+  firstName: String!
+  lastName: String!
+  twitter: String!
+}
+
+input UpdateUserInput {
+  id: Int!
+  email: String
+  active: Boolean
+  roles: [IdInput]
+  firstName: String
+  lastName: String
+  oldPassword: String
+  newPassword: String
+  twitter: String
+  hash: String
+}
+
+input OrderByParams {
+  field: String
+  direction: String
+}
+
+input PaginationCursorParams {
+  take: Int
+  cursor: String
+}
+
+input PaginationParams {
+  take: Int
+  skip: Int
+}
+
+type Query {
+  users(orderBy: OrderByParams, pagination: PaginationParams): Users!
+  user(id: Int!): User
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  confirmEmail(token: String!): User!
+  removeUser(id: Int!): User
+}

@@ -1,0 +1,36 @@
+scalar DateTime
+
+type Subscriber {
+  id: Int
+  email: String
+  referrals: Int
+  referrerrId: Int
+  referrer: Subscriber
+  referred: [Subscriber]
+  topics: [Topic]
+  topicActions: [TopicAction]
+  letterActions: [LetterAction]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input CreateSubscriberInput {
+  email: String!
+  referrerrId: Int
+  topicId: Int
+}
+
+type Subscribers {
+  total: Int
+  list: [Subscriber]
+}
+
+type Query {
+  subscribers(pagination: PaginationParams!, orderBy: OrderByParams): Subscribers!
+  subscriber(id: Int!): Subscriber
+}
+
+type Mutation {
+  createSubscriber(createSubscriberInput: CreateSubscriberInput!): Subscriber!
+  unsubscriberFromTopic(id: Int!, topicId: Int!): Subscriber
+}

@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  dev-db:
+    image: postgres:latest
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    networks:
+      - evening
+  test-db:
+    image: postgres:latest
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: testdb
+    networks:
+      - evening
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - 6378:6379
+    command: redis-server --save 20 1 --loglevel warning
+networks:
+  evening:

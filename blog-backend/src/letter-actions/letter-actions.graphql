@@ -1,0 +1,21 @@
+scalar DateTime
+
+type LetterAction {
+  letterId: Int
+  letter: Letter
+  subscriberId: Int
+  subscriber: Subscriber
+  action: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input CreateLetterActionInput {
+  letterId: Int!
+  subscriberId: Int!
+  action: String!
+}
+
+type Mutation {
+  createLetterAction(createLetterActionInput: CreateLetterActionInput!): LetterAction!
+}

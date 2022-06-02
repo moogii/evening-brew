@@ -1,0 +1,209 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Subscriber {
+  id           Int         @id @default(autoincrement())
+  email        String      @unique
+  isSubscribed Boolean     @default(false)
+  referrals    Int         @default(0)
+  referrerId   Int?
+  referrer     Subscriber? @relation("Referral", fields: [referrerId], references: [id])
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  referred      Subscriber[]       @relation("Referral")
+  address       SubscriberAddress?
+  topics        Topic[]
+  topicActions  TopicAction[]
+  letterActions LetterAction[]
+
+  @@map("Subscribers")
+}
+
+model SubscriberAddress {
+  id           Int        @id @default(autoincrement())
+  subscriberId Int        @unique
+  subscriber   Subscriber @relation(fields: [subscriberId], references: [id])
+  country      String
+  street       String
+  city         String
+  state        String
+  zip          String
+  phone        String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@map("SubscriberAddresses")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String   @unique
+  imageId   Int?     @unique
+  image     Image?   @relation(fields: [imageId], references: [id])
+  hash      String
+  hashIt    Int      @default(0)
+  twitter   String
+  active    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  roles   Role[]
+  letters Letter[]
+  posts   Post[]
+
+  @@map("Users")
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+
+  @@map("Roles")
+}
+
+model Topic {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  subscribers  Subscriber[]
+  topicActions TopicAction[]
+  letters      Letter[]
+  posts        Post[]
+
+  @@map("Topics")
+}
+
+model TopicAction {
+  id           Int        @id @default(autoincrement())
+  topicId      Int
+  topic        Topic      @relation(fields: [topicId], references: [id])
+  subscriberId Int
+  subscriber   Subscriber @relation(fields: [subscriberId], references: [id])
+  action       String // "subscribed", "unsubscribed" or "removed"
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@map("TopicActions")
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  full      String
+  thumb     String
+  source    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user          User?
+  letterCover   Letter? @relation("LetterCover")
+  letterSponsor Letter? @relation("LetterSponsor")
+  post          Post?
+
+  @@map("Images")
+}
+
+model Letter {
+  id             Int       @id @default(autoincrement())
+  name           String
+  slug           String    @unique
+  topicId        Int
+  topic          Topic     @relation(fields: [topicId], references: [id])
+  editorId       Int
+  editor         User      @relation(fields: [editorId], references: [id])
+  imageId        Int       @unique
+  image          Image     @relation("LetterCover", fields: [imageId], references: [id])
+  sponsorImageId Int?      @unique
+  sponsorImage   Image?    @relation("LetterSponsor", fields: [sponsorImageId], references: [id])
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  publishedAt    DateTime?
+
+  letterActions LetterAction[]
+  posts         Post[]
+  data          LetterData?
+
+  @@map("Letters")
+}
+
+model LetterData {
+  id           Int      @id @default(autoincrement())
+  letterId     Int      @unique
+  letter       Letter   @relation(fields: [letterId], references: [id])
+  clicks       Int      @default(0)
+  uniqueClicks Int      @default(0)
+  opens        Int      @default(0)
+  uniqueOpens  Int      @default(0)
+  recipents    Int      @default(0)
+  views        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model LetterAction {
+  letterId     Int
+  letter       Letter     @relation(fields: [letterId], references: [id])
+  subscriberId Int
+  subscriber   Subscriber @relation(fields: [subscriberId], references: [id])
+  action       String // "opened" or "clicked"
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@id([letterId, subscriberId])
+  @@map("LetterActions")
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  posts Post[]
+
+  @@map("Tags")
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  title       String
+  slug        String
+  description String?
+  content     String
+  views       Int       @default(0)
+  tagName     String?
+  tag         Tag?      @relation(fields: [tagName], references: [name])
+  imageId     Int?      @unique
+  image       Image?    @relation(fields: [imageId], references: [id])
+  letterId    Int?
+  letter      Letter?   @relation(fields: [letterId], references: [id])
+  topicId     Int
+  topic       Topic     @relation(fields: [topicId], references: [id])
+  writerId    Int
+  writer      User      @relation(fields: [writerId], references: [id])
+  isOnWeb     Boolean   @default(false)
+  createdAt   DateTime  @unique @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime?
+
+  @@map("Posts")
+}
