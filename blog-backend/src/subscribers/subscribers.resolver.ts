@@ -12,6 +12,14 @@ export class SubscribersResolver {
     return this.subscribersService.create(input);
   }
 
+  @Mutation('confirmSubscriber')
+  confirm(
+    @Args('email') email: string,
+    @Args('token') token: string,
+  ) {
+    return this.subscribersService.confirm(email, token);
+  }
+
   @Query('subscribers')
   findAll(
     @Args('pagination') pagination: PaginationInput,

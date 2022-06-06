@@ -75,7 +75,7 @@ export class UpdatePostInput {
 export class CreateSubscriberInput {
     email: string;
     referrerrId?: Nullable<number>;
-    topicId?: Nullable<number>;
+    topicId: number;
 }
 
 export class CreateTagInput {
@@ -164,6 +164,8 @@ export abstract class IMutation {
     abstract removePost(id: number): Nullable<Post> | Promise<Nullable<Post>>;
 
     abstract createSubscriber(createSubscriberInput: CreateSubscriberInput): Subscriber | Promise<Subscriber>;
+
+    abstract confirmSubscriber(email: string, token: string): Subscriber | Promise<Subscriber>;
 
     abstract unsubscriberFromTopic(id: number, topicId: number): Nullable<Subscriber> | Promise<Nullable<Subscriber>>;
 
