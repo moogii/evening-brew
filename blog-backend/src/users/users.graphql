@@ -20,6 +20,8 @@ type User {
   active: Boolean
   role: [Role]
   twitter: String
+  imageId: Int
+  image: Image
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -32,6 +34,7 @@ type Users {
 input CreateUserInput {
   email: String!
   roles: [IdInput]
+  imageId: Int!
   firstName: String!
   lastName: String!
   twitter: String!
@@ -40,6 +43,7 @@ input CreateUserInput {
 input UpdateUserInput {
   id: Int!
   email: String
+  imageId: Int
   active: Boolean
   roles: [IdInput]
   firstName: String

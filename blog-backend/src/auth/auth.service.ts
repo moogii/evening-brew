@@ -45,7 +45,6 @@ export class AuthService {
       throw new ForbiddenException('Credentials incorrect')
     }
 
-    // return token
     return this.signToken(user);
   }
 
@@ -86,7 +85,7 @@ export class AuthService {
     const data = {
       sub: user.id,
       it: user.hashIt,
-      roles: [user.roles.map(role => (role.name))],
+      roles: user.roles.map(role => (role.name)),
     }
 
     const accessToken = await this.jwt.signAsync(data, {

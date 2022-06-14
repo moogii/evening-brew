@@ -30,7 +30,11 @@ import { LetterActionsModule } from './letter-actions/letter-actions.module';
       resolvers: {
         DateTime: GraphQLISODateTime,
       },
-      context: ({ req, res }) => ({ req, res })
+      context: ({ req, res }) => ({ req, res }),
+      cors: {
+        origin: 'http://localhost:3000',
+        credentials: true,
+      },
     }),
     ConfigModule.forRoot({
       isGlobal: true,

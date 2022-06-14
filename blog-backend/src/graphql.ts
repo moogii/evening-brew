@@ -35,6 +35,7 @@ export class CreateLetterInput {
     topicId: number;
     imageId: number;
     sponsorImageId?: Nullable<number>;
+    sponsorUrl?: Nullable<string>;
     publishedAt?: Nullable<DateTime>;
     posts?: Nullable<Nullable<IdInput>[]>;
 }
@@ -45,6 +46,7 @@ export class UpdateLetterInput {
     slug?: Nullable<string>;
     topicId: number;
     imageId: number;
+    sponsorUrl?: Nullable<string>;
     sponsorImageId?: Nullable<number>;
     publishedAt?: Nullable<DateTime>;
     posts?: Nullable<Nullable<IdInput>[]>;
@@ -62,6 +64,7 @@ export class CreatePostInput {
 
 export class UpdatePostInput {
     id: number;
+    order?: Nullable<number>;
     title?: Nullable<string>;
     slug?: Nullable<string>;
     description?: Nullable<string>;
@@ -94,6 +97,7 @@ export class IdInput {
 export class CreateUserInput {
     email: string;
     roles?: Nullable<Nullable<IdInput>[]>;
+    imageId: number;
     firstName: string;
     lastName: string;
     twitter: string;
@@ -102,6 +106,7 @@ export class CreateUserInput {
 export class UpdateUserInput {
     id: number;
     email?: Nullable<string>;
+    imageId?: Nullable<number>;
     active?: Nullable<boolean>;
     roles?: Nullable<Nullable<IdInput>[]>;
     firstName?: Nullable<string>;
@@ -237,10 +242,24 @@ export class LetterAction {
     updatedAt?: Nullable<DateTime>;
 }
 
+export class LetterData {
+    id?: Nullable<number>;
+    letterId: number;
+    letter?: Nullable<Letter>;
+    clicks?: Nullable<number>;
+    uniqueClicks?: Nullable<number>;
+    opens?: Nullable<number>;
+    uniqueOpens?: Nullable<number>;
+    recipents?: Nullable<number>;
+    views?: Nullable<number>;
+    createdAt?: Nullable<DateTime>;
+    updatedAt?: Nullable<DateTime>;
+}
+
 export class Letter {
     id?: Nullable<number>;
-    name?: Nullable<string>;
-    slug?: Nullable<string>;
+    name: string;
+    slug: string;
     topicId?: Nullable<number>;
     topic?: Nullable<Topic>;
     editorId?: Nullable<number>;
@@ -249,7 +268,9 @@ export class Letter {
     image?: Nullable<Image>;
     sponsorImageId?: Nullable<number>;
     sponsorImage?: Nullable<Image>;
+    sponsorUrl?: Nullable<string>;
     posts?: Nullable<Nullable<Post>[]>;
+    data?: Nullable<Nullable<LetterData>[]>;
     createdAt?: Nullable<DateTime>;
     updatedAt?: Nullable<DateTime>;
     publishedAt?: Nullable<DateTime>;
@@ -273,6 +294,7 @@ export class Post {
     id?: Nullable<number>;
     title?: Nullable<string>;
     slug?: Nullable<string>;
+    order?: Nullable<number>;
     description?: Nullable<string>;
     content?: Nullable<string>;
     views?: Nullable<number>;
@@ -345,6 +367,8 @@ export class User {
     active?: Nullable<boolean>;
     role?: Nullable<Nullable<Role>[]>;
     twitter?: Nullable<string>;
+    imageId?: Nullable<number>;
+    image?: Nullable<Image>;
     createdAt?: Nullable<DateTime>;
     updatedAt?: Nullable<DateTime>;
 }

@@ -134,6 +134,7 @@ model Letter {
   image          Image     @relation("LetterCover", fields: [imageId], references: [id])
   sponsorImageId Int?      @unique
   sponsorImage   Image?    @relation("LetterSponsor", fields: [sponsorImageId], references: [id])
+  sponsorUrl     String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   publishedAt    DateTime?
@@ -188,6 +189,7 @@ model Post {
   title       String
   slug        String
   description String?
+  order       Int?
   content     String
   views       Int       @default(0)
   tagName     String?

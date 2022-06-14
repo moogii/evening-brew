@@ -53,6 +53,7 @@ export class LettersService {
         },
         include: {
           data: true,
+          editor: true,
         },
         orderBy: {
           'createdAt': 'desc',
@@ -70,7 +71,11 @@ export class LettersService {
         id,
       },
       include: {
-        posts: true,
+        posts: {
+          include: {
+            image: true
+          }
+        },
         sponsorImage: true,
         image: true,
         editor: true,

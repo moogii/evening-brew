@@ -1,9 +1,23 @@
 scalar DateTime
 
+type LetterData {
+  id: Int
+  letterId: Int!
+  letter: Letter
+  clicks: Int
+  uniqueClicks: Int
+  opens: Int
+  uniqueOpens: Int
+  recipents: Int
+  views: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
 type Letter {
   id: Int
-  name: String
-  slug: String
+  name: String!
+  slug: String!
   topicId: Int
   topic: Topic
   editorId: Int
@@ -12,7 +26,9 @@ type Letter {
   image: Image
   sponsorImageId: Int
   sponsorImage: Image
+  sponsorUrl: String
   posts: [Post]
+  data: [LetterData]
   createdAt: DateTime
   updatedAt: DateTime
   publishedAt: DateTime
@@ -24,6 +40,7 @@ input CreateLetterInput {
   topicId: Int!
   imageId: Int!
   sponsorImageId: Int
+  sponsorUrl: String
   publishedAt: DateTime
   posts: [IdInput]
 }
@@ -34,6 +51,7 @@ input UpdateLetterInput {
   slug: String
   topicId: Int!
   imageId: Int!
+  sponsorUrl: String
   sponsorImageId: Int
   publishedAt: DateTime
   posts: [IdInput]

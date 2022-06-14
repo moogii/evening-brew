@@ -16,7 +16,7 @@ export class AuthResolver {
     req.res.cookie("gid", result.refreshToken, {
       httpOnly: true,
       path: '/',
-      maxAge: 7 * 24 * 60 * 60, // 7 days 
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days 
     })
 
     return result;
@@ -39,7 +39,7 @@ export class AuthResolver {
     req.res.cookie("gid", result.refreshToken, {
       httpOnly: true,
       path: '/',
-      maxAge: 7 * 24 * 60 * 60, // 7 days 
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days 
     })
 
     return result;
