@@ -8,13 +8,15 @@ describe('TopicActionsService', () => {
   let service: TopicActionsService;
   let prisma: PrismaService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
     service = module.get<TopicActionsService>(TopicActionsService);
     prisma = module.get<PrismaService>(PrismaService);
+
+    await prisma.cleanDb();
   });
 
   let topic: Topic = null;
