@@ -33,7 +33,7 @@ type Users {
 
 input CreateUserInput {
   email: String!
-  roles: [IdInput]
+  roles: [IdInput]!
   imageId: Int!
   firstName: String!
   lastName: String!

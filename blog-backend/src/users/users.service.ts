@@ -87,15 +87,15 @@ export class UsersService {
   }
 
   findOne(id: number, userDto: UserDto) {
-    if (id === userDto.id || userDto.roles.includes(Role.ADMIN)) {
-      return this.prisma.user.findUnique({
-        where: {
-          id,
-        }
-      });
-    } else {
-      throw new ForbiddenException('Forbidden resource')
+    if (id !== userDto.id && !userDto.roles.includes(Role.ADMIN)) {
+      return Promise.reject(new ForbiddenException('Forbidden'))
+
     }
+    return this.prisma.user.findUnique({
+      where: {
+        id,
+      }
+    });
   }
 
   async update(input: UserUpdateInput, userDto: UserDto) {
@@ -108,13 +108,13 @@ export class UsersService {
 
       if (input.id === userDto.id) {
 
-        if (input.email) {
-          const user = await this.prisma.user.findUnique({
-            where: {
-              id: input.id
-            }
-          });
+        const user = await this.prisma.user.findUnique({
+          where: {
+            id: input.id
+          }
+        });
 
+        if (input.email && input.email !== user.email) {
           const token = this.jwt.sign({
             sub: user.id,
             email: input.email,
@@ -125,24 +125,23 @@ export class UsersService {
 
           const confirmationLink = `${this.config.get('FRONTEND_URL')}/user/email_confirmation?token=${token}`;
 
-          // try {
-          //   this.mailService.sendMail(
-          //     user.email,
-          //     'Email update confirmation',
-          //     'confirmation',
-          //     {
-          //       confirmationLink,
-          //     }
-          //   );
-          // } catch (error) { } // this won't work when testing
-
-          // update password
-          if (input.oldPassword && input.newPassword) {
-            const pwMatches = await argon.verify(user.hash, input.oldPassword);
-            if (pwMatches) {
-              const hash = await argon.hash(input.newPassword);
-              input.hash = hash;
-            }
+          try {
+            this.mailService.sendMail(
+              user.email,
+              'Email update confirmation',
+              'confirmation',
+              {
+                confirmationLink,
+              }
+            );
+          } catch (error) { }
+        }
+        // update password
+        if (input.oldPassword && input.newPassword) {
+          const pwMatches = await argon.verify(user.hash, input.oldPassword);
+          if (pwMatches) {
+            const hash = await argon.hash(input.newPassword);
+            input.hash = hash;
           }
         }
       }

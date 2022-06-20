@@ -18,8 +18,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "pretest": "yarn db:test:restart",
-    "test": "jest -i --no-cache --watch",
+    "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -27,7 +26,9 @@
     "prisma:test:deploy": "dotenv -e .env.test -- prisma migrate deploy",
     "db:test:rm": "docker compose rm test-db -s -f -v",
     "db:test:up": "docker compose up test-db -d",
-    "db:test:restart": "yarn db:test:rm && yarn db:test:up && sleep 1 && yarn prisma:test:deploy"
+    "db:test:restart": "yarn db:test:rm && yarn db:test:up && sleep 1 && yarn prisma:test:deploy",
+    "pretest:int": "yarn db:test:restart",
+    "test:int": "dotenv -e .env.test -- jest -i --no-cache --watch --config ./test/jest-integration.json"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.100.0",

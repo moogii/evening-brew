@@ -96,7 +96,7 @@ export class IdInput {
 
 export class CreateUserInput {
     email: string;
-    roles?: Nullable<Nullable<IdInput>[]>;
+    roles: Nullable<IdInput>[];
     imageId: number;
     firstName: string;
     lastName: string;

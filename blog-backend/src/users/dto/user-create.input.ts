@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsEmail, IsOptional, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsEmail, IsOptional, IsString, IsUrl } from "class-validator";
 import { CreateUserInput, IdInput } from "../../graphql";
 
 export class UserCreateInput extends CreateUserInput {
@@ -11,15 +11,15 @@ export class UserCreateInput extends CreateUserInput {
   active?: boolean;
 
   @IsArray()
-  @IsOptional()
-  roles?: IdInput[];
+  roles: IdInput[];
 
-  @IsString()
-  @IsOptional()
+  @IsString({ message: 'First name is required' })
   firstName: string;
 
-  @IsString()
-  @IsOptional()
+  @IsString({ message: 'Last name is required' })
   lastName: string;
+
+  @IsUrl({ message: 'Twitter is required' })
+  twitter: string;
 
 }

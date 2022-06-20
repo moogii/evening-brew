@@ -3,12 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ejs from 'ejs';
-import { SESClient } from "@aws-sdk/client-ses";
+import { SendEmailCommand, SESClient } from "@aws-sdk/client-ses";
 
 
 @Injectable()
 export class MailService {
-  client = null;
+  client: SESClient = null;
   constructor(private config: ConfigService) {
     this.client = new SESClient({
       region: config.get('AWS_REGION'),
@@ -19,30 +19,31 @@ export class MailService {
     });
   }
 
+  // TODO: use aws-ses template
+  // TODO: use redis queue
   async sendMail(to: string, subject: string, templateName: string, data?: ejs.Data): Promise<void> {
     try {
 
       const html = this.loadTemplate(templateName, data);
 
-      const response = await this.client.sendEmail({
+      this.client.send(new SendEmailCommand({
         Destination: {
-          toAddresses: [to]
+          ToAddresses: [to]
         },
         Message: {
           Body: {
             Html: {
-              charset: "UTF-8",
+              Charset: "UTF-8",
               Data: html,
             },
           },
           Subject: {
-            charset: "UTF-8",
+            Charset: "UTF-8",
             Data: subject,
           },
         },
-        source: this.config.get('MAIL_SENDER'),
-      });
-
+        Source: this.config.get('MAIL_SENDER'),
+      }));
     } catch (error) {
       throw error;
     }
