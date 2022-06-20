@@ -1,16 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Tag } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { PrismaService } from '../prisma/prisma.service';
 import { TagCreateInput, TagUpdateInput } from './dto';
 
 @Injectable()
 export class TagsService {
   constructor(private prisma: PrismaService) { }
-  create(input: TagCreateInput) {
-    return this.prisma.tag.create({
-      data: {
-        name: input.name.trim(),
-      },
-    });
+  async create(input: TagCreateInput): Promise<Tag> {
+    try {
+      const tag = await this.prisma.tag.create({
+        data: {
+          name: input.name.trim(),
+        },
+      });
+      return tag;
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new ForbiddenException('Tag exists')
+      }
+      throw error;
+    }
   }
 
   findAll() {
