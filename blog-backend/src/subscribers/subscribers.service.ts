@@ -179,6 +179,12 @@ export class SubscribersService {
     });
   }
 
+  findByEmail(email: string) {
+    return this.prisma.subscriber.findUnique({
+      where: { email },
+    });
+  }
+
   async unsubscriberFromTopic(id: number, topicId: number) {
     const subscriber = await this.prisma.subscriber.update({
       where: { id },

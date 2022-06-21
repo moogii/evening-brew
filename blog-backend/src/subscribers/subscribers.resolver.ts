@@ -33,6 +33,11 @@ export class SubscribersResolver {
     return this.subscribersService.findOne(id);
   }
 
+  @Query('subscriberByEmail')
+  findByEmail(@Args('email') email: string) {
+    return this.subscribersService.findByEmail(email);
+  }
+
   @Mutation('unsubscriberFromTopic')
   unsubscriberFromTopic(@Args('id') id: number, @Args('topicId') topicId: number) {
     return this.subscribersService.unsubscriberFromTopic(id, topicId);

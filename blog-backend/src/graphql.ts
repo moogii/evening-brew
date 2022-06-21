@@ -223,6 +223,8 @@ export abstract class IQuery {
 
     abstract subscriber(id: number): Nullable<Subscriber> | Promise<Nullable<Subscriber>>;
 
+    abstract subscriberByEmail(email: string): Nullable<Subscriber> | Promise<Nullable<Subscriber>>;
+
     abstract tags(): Nullable<Tag>[] | Promise<Nullable<Tag>[]>;
 
     abstract tag(id: number): Nullable<Tag> | Promise<Nullable<Tag>>;

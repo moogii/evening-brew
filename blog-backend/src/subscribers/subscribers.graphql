@@ -28,6 +28,7 @@ type Subscribers {
 type Query {
   subscribers(pagination: PaginationParams!, orderBy: OrderByParams): Subscribers!
   subscriber(id: Int!): Subscriber
+  subscriberByEmail(email: String!): Subscriber
 }
 
 type Mutation {
