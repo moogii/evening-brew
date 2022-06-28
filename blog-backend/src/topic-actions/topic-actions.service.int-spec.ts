@@ -19,14 +19,18 @@ describe('TopicActionsService', () => {
     await prisma.cleanDb();
   });
 
+  afterAll(async () => {
+    await prisma.$disconnect();
+  })
+
   let topic: Topic = null;
   let subscriber: Subscriber = null;
 
   it('should create a topic', async () => {
     topic = await prisma.topic.create({
       data: {
-        name: 'Test topic',
-        slug: 'test-topic',
+        name: 'Test topic-13',
+        slug: 'test-topic-13',
       }
     });
     expect(topic).toBeDefined();

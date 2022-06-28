@@ -48,7 +48,7 @@ export class SubscribersService {
           },
         });
 
-        this.topicActionService.create({
+        await this.topicActionService.create({
           topicId,
           subscriberId: subscriber.id,
           action: 'subscribed',
@@ -66,7 +66,7 @@ export class SubscribersService {
       }
     });
 
-    this.topicActionService.create({
+    await this.topicActionService.create({
       topicId,
       subscriberId: newSubscriber.id,
       action: 'subscribed',
@@ -102,6 +102,10 @@ export class SubscribersService {
       throw new ForbiddenException('Subscriber not found');
     }
 
+    if (subscriber.isSubscribed) {
+      throw new ForbiddenException('Subscriber already confirmed');
+    }
+
     const isValid = await this.jwt.verifyAsync(token, {
       secret: `${subscriberEmail}${subscriber.createdAt}`,
     });
@@ -130,6 +134,7 @@ export class SubscribersService {
       },
     });
 
+
     // incrementing referrer's referral count
     if (updatedSubscriber.referrerId)
       this.prisma.subscriber.update({
@@ -147,11 +152,11 @@ export class SubscribersService {
   }
 
   async findAll(
-    pagination: PaginationInput,
+    pagination?: PaginationInput,
     orderBy?: OrderByInput,
   ) {
-    const { take = 20, skip = 0 } = pagination;
-    const { field = 'createdAt', direction = 'desc' } = orderBy;
+    const { take = 20, skip = 0 } = pagination || {};
+    const { field = 'createdAt', direction = 'desc' } = orderBy || {};
     const [total, list] = await this.prisma.$transaction([
       this.prisma.subscriber.count(),
       this.prisma.post.findMany({

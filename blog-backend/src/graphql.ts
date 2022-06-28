@@ -219,7 +219,7 @@ export abstract class IQuery {
 
     abstract postBySlug(date: DateTime, slug: string): Nullable<Post> | Promise<Nullable<Post>>;
 
-    abstract subscribers(pagination: PaginationParams, orderBy?: Nullable<OrderByParams>): Subscribers | Promise<Subscribers>;
+    abstract subscribers(pagination?: Nullable<PaginationParams>, orderBy?: Nullable<OrderByParams>): Subscribers | Promise<Subscribers>;
 
     abstract subscriber(id: number): Nullable<Subscriber> | Promise<Nullable<Subscriber>>;
 

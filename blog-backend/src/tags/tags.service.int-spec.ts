@@ -18,6 +18,10 @@ describe('TagsService', () => {
     await prisma.cleanDb();
   });
 
+  afterAll(async () => {
+    await prisma.$disconnect();
+  })
+
   describe('create', () => {
     it('should create a tag', async () => {
       const tag = await service.create({

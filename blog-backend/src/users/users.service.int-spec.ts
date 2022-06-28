@@ -22,6 +22,10 @@ describe('UsersService', () => {
     await prisma.cleanDb();
   });
 
+  afterAll(async () => {
+    await prisma.$disconnect();
+  })
+
   const userMock = {
     email: `newAdmin@yuain.mn`,
     firstName: 'Admin',

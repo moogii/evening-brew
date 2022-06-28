@@ -27,9 +27,9 @@ export class PostsService {
         image: true,
         writer: true,
       },
-      cursor: {
+      cursor: cursor ? {
         createdAt: cursor,
-      },
+      } : undefined,
       take,
       skip: cursor ? 1 : 0,
       where: {
@@ -52,11 +52,11 @@ export class PostsService {
 
   async findPosts(
     pagination: PaginationInput,
-    orderBy: OrderByInput,
+    orderBy?: OrderByInput,
     topicId?: number
   ) {
     const { take = 20, skip = 0 } = pagination;
-    const { field = 'createdAt', direction = 'desc' } = orderBy;
+    const { field = 'createdAt', direction = 'desc' } = orderBy || {};
 
     const [total, list] = await this.prisma.$transaction([
       this.prisma.post.count(),
@@ -88,16 +88,36 @@ export class PostsService {
     });
   }
 
-  findBySlug(date: Date, slug: string) {
-    return this.prisma.post.findFirst({
+  async findBySlug(date: Date, slug: string) {
+    const { count } = await this.prisma.post.updateMany({
       where: {
-        slug: slug,
+        slug,
         publishedAt: {
-          gte: date,
-          lt: new Date(date.getDate() + 1)
-        }
-      }
-    })
+          lte: date,
+        },
+      },
+      data: {
+        views: { increment: 1 }
+      },
+    });
+
+    if (count === 1) {
+      return this.prisma.post.findFirst({
+        where: {
+          slug,
+          publishedAt: {
+            lte: date,
+          },
+        },
+        include: {
+          image: true,
+          writer: true,
+          letter: true,
+        },
+      });
+    } else {
+      return null;
+    }
   }
 
   update(input: PostUpdateInput) {

@@ -22,7 +22,7 @@ export class SubscribersResolver {
 
   @Query('subscribers')
   findAll(
-    @Args('pagination') pagination: PaginationInput,
+    @Args('pagination') pagination?: PaginationInput,
     @Args('orderBy') orderBy?: OrderByInput,
   ) {
     return this.subscribersService.findAll(pagination, orderBy);
